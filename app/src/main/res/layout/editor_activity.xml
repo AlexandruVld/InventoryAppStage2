@@ -96,12 +96,14 @@
         android:orientation="horizontal">
 
         <TextView
+
             style="@style/CategoryStyle"
             android:text="@string/quantity" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="2"
             android:orientation="horizontal">
 
             <Button
@@ -115,6 +117,7 @@
                 style="@style/EditorFieldStyle"
                 android:layout_weight="1"
                 android:hint="@string/quantity"
+                android:textAlignment="center"
                 android:inputType="number" />
 
             <Button
