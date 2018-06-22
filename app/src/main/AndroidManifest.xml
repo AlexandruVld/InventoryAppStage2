@@ -24,7 +24,7 @@
         </activity>
         <provider
             android:authorities=".data.ProductProvider"
-            android:name="com.example.vlada.inventoryappstage2"
+            android:name="com.example.vlada.inventoryappstage2.data.ProductProvider"
             android:exported="false" />
     </application>
 

@@ -23,6 +23,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.example.vlada.inventoryappstage2.data.ProductContract;
 import com.example.vlada.inventoryappstage2.data.ProductContract.ProductEntry;
 import static com.example.vlada.inventoryappstage2.data.ProductContract.ProductEntry.COLUMN_PRODUCT_AVAILABILITY;
 import static com.example.vlada.inventoryappstage2.data.ProductContract.ProductEntry.COLUMN_PRODUCT_NAME;
@@ -223,14 +225,41 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             return;
         }
 
-        if (TextUtils.isEmpty(nameString) || TextUtils.isEmpty(priceString) ||
-                TextUtils.isEmpty(quantityString) || TextUtils.isEmpty(supplierNameString) ||
-                TextUtils.isEmpty(supplierPhoneString) || mAvailability == ProductEntry.AVAILABILITY_UNKNOWN) {
+        if (TextUtils.isEmpty(supplierNameString)){
+            mSupplierEditText.requestFocus();
+            mSupplierEditText.setError(getString(R.string.empty_field_error));
+            Toast.makeText(this, getString(R.string.enter_value_into_field), Toast.LENGTH_LONG).show();
+            return;
+
+        }
+        if (TextUtils.isEmpty(quantityString)){
+            mQuantityEditText.requestFocus();
+            mQuantityEditText.setError(getString(R.string.empty_field_error));
+            Toast.makeText(this, getString(R.string.enter_value_into_field), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (TextUtils.isEmpty(nameString)){
             mNameEditText.requestFocus();
             mNameEditText.setError(getString(R.string.empty_field_error));
             Toast.makeText(this, getString(R.string.enter_value_into_field), Toast.LENGTH_LONG).show();
             return;
         }
+
+        if (TextUtils.isEmpty(priceString)){
+            mPriceEditText.requestFocus();
+            mPriceEditText.setError(getString(R.string.empty_field_error));
+            Toast.makeText(this, getString(R.string.enter_value_into_field), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (TextUtils.isEmpty(supplierPhoneString)){
+            mSupplierPhoneEditText.requestFocus();
+            mSupplierPhoneEditText.setError(getString(R.string.empty_field_error));
+            Toast.makeText(this, getString(R.string.enter_value_into_field), Toast.LENGTH_LONG).show();
+            return;
+        }
+
 
         // Create a ContentValues object where column names are the keys,
         // and products attributes from the editor are the values.
@@ -248,7 +277,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
             // New product, insert a new product into the provider,
             // returning the content URI for the new product.
-            Uri newUri = getContentResolver().insert(ProductEntry.CONTENT_URI, values);
+            Uri newUri = getContentResolver().insert(ProductContract.ProductEntry.CONTENT_URI, values);
 
             // Show a toast message depending on whether or not the insertion was successful.
             if (newUri == null) {

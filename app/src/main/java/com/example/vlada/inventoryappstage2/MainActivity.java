@@ -104,6 +104,7 @@ public class MainActivity extends AppCompatActivity  implements
         String[] projection = {
                 ProductEntry._ID,
                 ProductEntry.COLUMN_PRODUCT_NAME,
+                ProductEntry.COLUMN_SUPPLIER_PHONE_NUMBER,
                 ProductEntry.COLUMN_PRODUCT_AVAILABILITY,
                 ProductEntry.COLUMN_PRODUCT_PRICE,
                 ProductEntry.COLUMN_PRODUCT_QUANTITY};
