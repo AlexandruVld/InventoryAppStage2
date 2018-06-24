@@ -10,7 +10,7 @@ public final class ProductContract {
 
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
-    public static final String PATH_PRODUCT = "inventoryappstage2";
+    public static final String PATH_PRODUCT = "products";
 
     private ProductContract() {}
 
