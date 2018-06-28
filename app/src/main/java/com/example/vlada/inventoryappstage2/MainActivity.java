@@ -18,7 +18,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.vlada.inventoryappstage2.data.ProductContract.ProductEntry;
+import com.example.vlada.inventoryappstage2.data.ProductContract;
+
 
 public class MainActivity extends AppCompatActivity  implements
         LoaderManager.LoaderCallbacks<Cursor>{
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity  implements
                 Intent intent = new Intent(MainActivity.this, EditorActivity.class);
 
                 // Form the content URI that represents the specific product that was clicked on
-                Uri currentItUri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI, id);
+                Uri currentItUri = ContentUris.withAppendedId(ProductContract.ProductEntry.CONTENT_URI, id);
 
                 // Set the URI on the data field of the intent
                 intent.setData(currentItUri);
@@ -102,16 +103,14 @@ public class MainActivity extends AppCompatActivity  implements
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         // Define a projection that specifies the columns from the table we care about.
         String[] projection = {
-                ProductEntry._ID,
-                ProductEntry.COLUMN_PRODUCT_NAME,
-                ProductEntry.COLUMN_SUPPLIER_PHONE_NUMBER,
-                ProductEntry.COLUMN_PRODUCT_AVAILABILITY,
-                ProductEntry.COLUMN_PRODUCT_PRICE,
-                ProductEntry.COLUMN_PRODUCT_QUANTITY};
+                ProductContract.ProductEntry._ID,
+                ProductContract.ProductEntry.COLUMN_PRODUCT_NAME,
+                ProductContract.ProductEntry.COLUMN_PRODUCT_QUANTITY,
+                ProductContract.ProductEntry.COLUMN_PRODUCT_PRICE};
 
         // This loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(this,   // Parent activity context
-                ProductEntry.CONTENT_URI,      // Provider content URI to query
+                ProductContract.ProductEntry.CONTENT_URI,      // Provider content URI to query
                 projection,                    // Columns to include in the resulting Cursor
                 null,                  // No selection clause
                 null,               // No selection arguments
@@ -134,7 +133,7 @@ public class MainActivity extends AppCompatActivity  implements
      * Helper method to delete all entries in the database.
      */
     private void deleteAll() {
-        int entryDeleted = getContentResolver().delete(ProductEntry.CONTENT_URI, null, null);
+        int entryDeleted = getContentResolver().delete(ProductContract.ProductEntry.CONTENT_URI, null, null);
         Log.v("MainActivity", entryDeleted + " entry deleted from product database");
     }
 }

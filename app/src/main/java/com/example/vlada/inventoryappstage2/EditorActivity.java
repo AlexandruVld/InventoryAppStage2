@@ -17,47 +17,39 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.vlada.inventoryappstage2.data.ProductContract;
 import com.example.vlada.inventoryappstage2.data.ProductContract.ProductEntry;
-import static com.example.vlada.inventoryappstage2.data.ProductContract.ProductEntry.COLUMN_PRODUCT_AVAILABILITY;
+
+import java.util.Locale;
 import static com.example.vlada.inventoryappstage2.data.ProductContract.ProductEntry.COLUMN_PRODUCT_NAME;
 import static com.example.vlada.inventoryappstage2.data.ProductContract.ProductEntry.COLUMN_PRODUCT_PRICE;
 import static com.example.vlada.inventoryappstage2.data.ProductContract.ProductEntry.COLUMN_PRODUCT_QUANTITY;
-import static com.example.vlada.inventoryappstage2.data.ProductContract.ProductEntry.COLUMN_PRODUCT_SUPPLIER;
+import static com.example.vlada.inventoryappstage2.data.ProductContract.ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME;
 import static com.example.vlada.inventoryappstage2.data.ProductContract.ProductEntry.COLUMN_SUPPLIER_PHONE_NUMBER;
 
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final int EXISTING_IT_LOADER = 0;
+    private static final int EXISTING_PRODUCT_LOADER = 0;
 
     private Uri mActualProductUri;
 
     private EditText mNameEditText;
 
     // EditText field to enter the supplier name
-    private EditText mSupplierEditText;
+    private EditText mSupplierNameEditText;
 
     // EditText field to enter the supplier phone number
     private EditText mSupplierPhoneEditText;
-
-    // EditText field to enter the product availability
-    private Spinner mAvailabilitySpinner;
 
     // EditText field to enter the product quantity
     private EditText mQuantityEditText;
 
     //EditText field to enter the product price
     private EditText mPriceEditText;
-
-    // Availability of the product. The possible values are in ProductContract.java file
-    private int mAvailability = ProductEntry.AVAILABILITY_UNKNOWN;
 
     private boolean mProductHasChanged = false;
 
@@ -92,14 +84,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
             // Initialize a loader to read the data from the database
             // and display the current values in the editor
-            getLoaderManager().initLoader(EXISTING_IT_LOADER, null, this);
+            getLoaderManager().initLoader(EXISTING_PRODUCT_LOADER, null, this);
         }
 
         // Find all relevant views that we will need to read user input from
         mNameEditText = findViewById(R.id.edit_product_name);
-        mSupplierEditText = findViewById(R.id.edit_supplier_name);
+        mSupplierNameEditText = findViewById(R.id.edit_supplier_name);
         mSupplierPhoneEditText = findViewById(R.id.edit_supplier_phone_number);
-        mAvailabilitySpinner = findViewById(R.id.spinner_availability);
         mQuantityEditText = findViewById(R.id.edit_product_quantity);
         mPriceEditText = findViewById(R.id.edit_product_price);
         Button mIncreaseButton = findViewById(R.id.increase_button);
@@ -107,10 +98,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         Button mOrderButton = findViewById(R.id.order_button);
 
         mNameEditText.setOnTouchListener(mTouchListener);
-        mPriceEditText.setOnTouchListener(mTouchListener);
-        mQuantityEditText.setOnTouchListener(mTouchListener);
-        mSupplierEditText.setOnTouchListener(mTouchListener);
+        mSupplierNameEditText.setOnTouchListener(mTouchListener);
         mSupplierPhoneEditText.setOnTouchListener(mTouchListener);
+        mQuantityEditText.setOnTouchListener(mTouchListener);
+        mPriceEditText.setOnTouchListener(mTouchListener);
         mIncreaseButton.setOnTouchListener(mTouchListener);
         mDecreaseButton.setOnTouchListener(mTouchListener);
 
@@ -158,44 +149,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             }
         });
 
-        setupSpinner();
-    }
-
-    // Setup the dropdown spinner that allows the user to select the availability of the product
-    private void setupSpinner() {
-        // Create adapter for spinner. The list options are from the String array it will use
-        // the spinner will use the default layout
-        ArrayAdapter availabilitySpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.array_availability_options, android.R.layout.simple_spinner_item);
-
-        // Specify dropdown layout style - simple list view with 1 item per line
-        availabilitySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-
-        // Apply the adapter to the spinner
-        mAvailabilitySpinner.setAdapter(availabilitySpinnerAdapter);
-
-        // Set the integer mSelected to the constant values
-        mAvailabilitySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selection = (String) parent.getItemAtPosition(position);
-                if (!TextUtils.isEmpty(selection)) {
-                    if (selection.equals(getString(R.string.availability_yes))) {
-                        mAvailability = ProductEntry.AVAILABILITY_IN_STOCK;
-                    } else if (selection.equals(getString(R.string.availability_no))) {
-                        mAvailability = ProductEntry.AVAILABILITY_OUT_OF_STOCK;
-                    } else {
-                        mAvailability = ProductEntry.AVAILABILITY_UNKNOWN;
-                    }
-                }
-            }
-
-            // Because AdapterView is an abstract class, onNothingSelected must be defined
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                mAvailability = ProductEntry.AVAILABILITY_UNKNOWN;
-            }
-        });
     }
 
     private void saveProduct() {
@@ -203,20 +156,20 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // Use trim to eliminate leading or trailing white space
         String nameString = mNameEditText.getText().toString().trim();
 
-        String priceString = mPriceEditText.getText().toString().trim();
+        String supplierNameString = mSupplierNameEditText.getText().toString().trim();
+
+        String supplierPhoneString = mSupplierPhoneEditText.getText().toString().trim();
 
         String quantityString = mQuantityEditText.getText().toString().trim();
 
-        String supplierNameString = mSupplierEditText.getText().toString().trim();
-
-        String supplierPhoneString = mSupplierPhoneEditText.getText().toString().trim();
+        String priceString = mPriceEditText.getText().toString().trim();
 
         // Check if this is supposed to be a new product
         // and check if all the fields in the editor are blank
         if (mActualProductUri == null &&
-                TextUtils.isEmpty(nameString) && TextUtils.isEmpty(priceString) &&
-                TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(supplierNameString) &&
-                TextUtils.isEmpty(supplierPhoneString) && mAvailability == ProductEntry.AVAILABILITY_UNKNOWN) {
+                TextUtils.isEmpty(nameString) && TextUtils.isEmpty(supplierNameString) &&
+                TextUtils.isEmpty(supplierPhoneString) && TextUtils.isEmpty(quantityString) &&
+                TextUtils.isEmpty(priceString)) {
             // Since no fields were modified, we can return early without creating a new product.
             // No need to create ContentValues and no need to do any ContentProvider operations.
             Toast.makeText(this, getResources().getString(R.string.no_field_modification), Toast.LENGTH_SHORT).show();
@@ -225,23 +178,31 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             return;
         }
 
+        if (TextUtils.isEmpty(nameString)) {
+            mNameEditText.requestFocus();
+            mNameEditText.setError(getString(R.string.empty_field_error));
+            Toast.makeText(this, getString(R.string.enter_value_into_field), Toast.LENGTH_LONG).show();
+            return;
+        }
+
         if (TextUtils.isEmpty(supplierNameString)){
-            mSupplierEditText.requestFocus();
-            mSupplierEditText.setError(getString(R.string.empty_field_error));
+            mSupplierNameEditText.requestFocus();
+            mSupplierNameEditText.setError(getString(R.string.empty_field_error));
             Toast.makeText(this, getString(R.string.enter_value_into_field), Toast.LENGTH_LONG).show();
             return;
 
         }
+
+        if (TextUtils.isEmpty(supplierPhoneString)) {
+            mSupplierPhoneEditText.requestFocus();
+            mSupplierPhoneEditText.setError(getString(R.string.empty_field_error));
+            Toast.makeText(this, getString(R.string.enter_value_into_field), Toast.LENGTH_LONG).show();
+            return;
+        }
+
         if (TextUtils.isEmpty(quantityString)){
             mQuantityEditText.requestFocus();
             mQuantityEditText.setError(getString(R.string.empty_field_error));
-            Toast.makeText(this, getString(R.string.enter_value_into_field), Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        if (TextUtils.isEmpty(nameString)){
-            mNameEditText.requestFocus();
-            mNameEditText.setError(getString(R.string.empty_field_error));
             Toast.makeText(this, getString(R.string.enter_value_into_field), Toast.LENGTH_LONG).show();
             return;
         }
@@ -253,24 +214,15 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             return;
         }
 
-        if (TextUtils.isEmpty(supplierPhoneString)){
-            mSupplierPhoneEditText.requestFocus();
-            mSupplierPhoneEditText.setError(getString(R.string.empty_field_error));
-            Toast.makeText(this, getString(R.string.enter_value_into_field), Toast.LENGTH_LONG).show();
-            return;
-        }
-
-
         // Create a ContentValues object where column names are the keys,
         // and products attributes from the editor are the values.
         ContentValues values = new ContentValues();
         values.put(COLUMN_PRODUCT_NAME, nameString);
+        values.put(COLUMN_PRODUCT_SUPPLIER_NAME, supplierNameString);
+        values.put(COLUMN_SUPPLIER_PHONE_NUMBER, supplierPhoneString);
+        values.put(COLUMN_PRODUCT_QUANTITY, quantityString);
         float priceFloat = Float.parseFloat(priceString);
         values.put(COLUMN_PRODUCT_PRICE, priceFloat);
-        values.put(COLUMN_PRODUCT_QUANTITY, quantityString);
-        values.put(COLUMN_PRODUCT_SUPPLIER, supplierNameString);
-        values.put(COLUMN_SUPPLIER_PHONE_NUMBER, supplierPhoneString);
-        values.put(COLUMN_PRODUCT_AVAILABILITY, mAvailability);
 
         // Determine if this is a new or existing product by checking if mActualProductUri is null or not
         if (mActualProductUri == null) {
@@ -396,10 +348,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         String[] projection = {
                 ProductEntry._ID,
-                COLUMN_PRODUCT_NAME,
-                ProductEntry.COLUMN_PRODUCT_SUPPLIER,
+                ProductEntry.COLUMN_PRODUCT_NAME,
+                ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME,
                 ProductEntry.COLUMN_SUPPLIER_PHONE_NUMBER,
-                ProductEntry.COLUMN_PRODUCT_AVAILABILITY,
                 ProductEntry.COLUMN_PRODUCT_QUANTITY,
                 ProductEntry.COLUMN_PRODUCT_PRICE};
 
@@ -421,9 +372,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if (cursor.moveToFirst()) {
             // Find the columns of product attributes that we're interested in
             int productNameColumnIndex = cursor.getColumnIndex(COLUMN_PRODUCT_NAME);
-            int productSupplierColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_SUPPLIER);
+            int productSupplierColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME);
             int supplierPhoneColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_SUPPLIER_PHONE_NUMBER);
-            int productAvailabilityColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_AVAILABILITY);
             int productQuantityColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY);
             int productPriceColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_PRICE);
 
@@ -431,26 +381,15 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             String productName = cursor.getString(productNameColumnIndex);
             String productSupplier = cursor.getString(productSupplierColumnIndex);
             String supplierPhone = cursor.getString(supplierPhoneColumnIndex);
-            int productAvailability = cursor.getInt(productAvailabilityColumnIndex);
             int productQuantity = cursor.getInt(productQuantityColumnIndex);
-            int productPrice = cursor.getInt(productPriceColumnIndex);
+            Float productPrice = cursor.getFloat(productPriceColumnIndex);
 
             mNameEditText.setText(productName);
-            mSupplierEditText.setText(productSupplier);
+            mSupplierNameEditText.setText(productSupplier);
             mSupplierPhoneEditText.setText(supplierPhone);
-            mQuantityEditText.setText(Integer.toString(productQuantity));
-            mPriceEditText.setText(Integer.toString(productPrice));
+            mQuantityEditText.setText(String.format(Integer.toString(productQuantity), Locale.getDefault()));
+            mPriceEditText.setText(String.format(Float.toString(productPrice), Locale.getDefault()));
 
-            switch (productAvailability){
-                case ProductEntry.AVAILABILITY_IN_STOCK:
-                    mAvailabilitySpinner.setSelection(1);
-                    break;
-                case ProductEntry.AVAILABILITY_OUT_OF_STOCK:
-                    mAvailabilitySpinner.setSelection(2);
-                    break;
-                case ProductEntry.AVAILABILITY_UNKNOWN:
-                    mAvailabilitySpinner.setSelection(0);
-            }
         }
 
     }
@@ -458,9 +397,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mNameEditText.setText("");
-        mSupplierEditText.setText("");
+        mSupplierNameEditText.setText("");
         mSupplierPhoneEditText.setText("");
-        mAvailabilitySpinner.setSelection(0);
         mQuantityEditText.setText("");
         mPriceEditText.setText("");
 
@@ -538,10 +476,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 Toast.makeText(this, getString(R.string.editor_delete_product_successful),
                         Toast.LENGTH_SHORT).show();
             }
-        }
 
-        // Close the activity
-        finish();
+            // Close the activity
+            finish();
+        }
     }
 }
 

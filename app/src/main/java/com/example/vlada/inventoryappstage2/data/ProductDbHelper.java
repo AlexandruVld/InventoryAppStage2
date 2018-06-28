@@ -8,7 +8,7 @@ import com.example.vlada.inventoryappstage2.data.ProductContract.ProductEntry;
 public class ProductDbHelper extends SQLiteOpenHelper{
 
     // Name of the database file
-    private static final String DATABASE_NAME = "shop.db";
+    private static final String DATABASE_NAME = "products.db";
 
     // Database version. If you change the database schema, you must increment the database version.
     private static final int DATABASE_VERSION = 1;
@@ -24,14 +24,13 @@ public class ProductDbHelper extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Create a String that contains the SQL statement to create the products table
-        String SQL_CREATE_PRODUCTS_TABLE =  "CREATE TABLE " + ProductEntry.TABLE_NAME + " ("
-                + ProductEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + ProductEntry.COLUMN_PRODUCT_NAME + " TEXT NOT NULL, "
-                + ProductEntry.COLUMN_PRODUCT_SUPPLIER + " TEXT NOT NULL, "
-                + ProductEntry.COLUMN_SUPPLIER_PHONE_NUMBER + " INTEGER NOT NULL, "
-                + ProductEntry.COLUMN_PRODUCT_AVAILABILITY + " INTEGER NOT NULL, "
-                + ProductEntry.COLUMN_PRODUCT_QUANTITY + " INTEGER NOT NULL DEFAULT 0, "
-                + ProductEntry.COLUMN_PRODUCT_PRICE + " REAL NOT NULL); ";
+        String SQL_CREATE_PRODUCTS_TABLE = "CREATE TABLE " + ProductEntry.TABLE_NAME + " (" +
+                ProductEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                ProductEntry.COLUMN_PRODUCT_NAME + " TEXT NOT NULL, " +
+                ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME + " TEXT NOT NULL, " +
+                ProductEntry.COLUMN_SUPPLIER_PHONE_NUMBER + " TEXT NOT NULL, " +
+                ProductEntry.COLUMN_PRODUCT_QUANTITY + " INTEGER NOT NULL DEFAULT 0, " +
+                ProductEntry.COLUMN_PRODUCT_PRICE + " REAL NOT NULL); ";
 
         // Execute the SQL statement
         db.execSQL(SQL_CREATE_PRODUCTS_TABLE);

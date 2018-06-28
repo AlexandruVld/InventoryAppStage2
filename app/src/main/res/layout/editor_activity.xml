@@ -61,35 +61,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/container_availability"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            style="@style/CategoryStyle"
-            android:text="@string/category_availability" />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:orientation="vertical">
-
-            <Spinner
-                android:id="@+id/spinner_availability"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/spinner_height"
-                android:paddingEnd="@dimen/spinner_dimen"
-                android:paddingLeft="@dimen/spinner_dimen"
-                android:paddingRight="@dimen/spinner_dimen"
-                android:paddingStart="@dimen/spinner_dimen"
-                android:spinnerMode="dropdown" />
-
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/container_quantity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

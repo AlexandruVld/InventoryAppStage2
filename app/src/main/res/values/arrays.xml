@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string-array name="array_availability_options">
-        <item>@string/availability_unknown</item>
-        <item>@string/availability_yes</item>
-        <item>@string/availability_no</item>
-    </string-array>
-</resources>

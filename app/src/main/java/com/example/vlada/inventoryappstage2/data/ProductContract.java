@@ -6,11 +6,11 @@ import android.provider.BaseColumns;
 
 public final class ProductContract {
 
+    public static final String PATH_PRODUCT = "inventoryappstage2";
+
     public static final String CONTENT_AUTHORITY = "com.example.vlada.inventoryappstage2";
 
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
-
-    public static final String PATH_PRODUCT = "products";
 
     private ProductContract() {}
 
@@ -45,15 +45,11 @@ public final class ProductContract {
 
         // Name of the supplier
         // Text type
-        public final static String COLUMN_PRODUCT_SUPPLIER = "supplier";
+        public final static String COLUMN_PRODUCT_SUPPLIER_NAME = "supplier";
 
         // Phone number of the supplier
         // Integer type
         public final static String COLUMN_SUPPLIER_PHONE_NUMBER = "phone";
-
-        // Availability of the product
-        // Integer type
-        public final static String COLUMN_PRODUCT_AVAILABILITY = "availability";
 
         // Quantity of the product
         // Integer type
@@ -63,18 +59,6 @@ public final class ProductContract {
         // Real type
         public final static String COLUMN_PRODUCT_PRICE = "price";
 
-        //Possible values for the availability of the product
-        public static final int AVAILABILITY_UNKNOWN = 0;
-        public static final int AVAILABILITY_IN_STOCK = 1;
-        public static final int AVAILABILITY_OUT_OF_STOCK = 2;
-
-        public static boolean isValidAvailability(int availability) {
-            if (availability == AVAILABILITY_UNKNOWN || availability == AVAILABILITY_IN_STOCK ||
-                    availability == AVAILABILITY_OUT_OF_STOCK) {
-                return true;
-            }
-            return false;
-        }
     }
 }
 
